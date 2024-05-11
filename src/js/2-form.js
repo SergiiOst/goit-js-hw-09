@@ -1,7 +1,7 @@
 // Виконуй це завдання у файлах 2-form.html і 2-form.js. Розбий його на декілька підзавдань:
 
-// Оголоси поза будь-якими функціями об’єкт formData з полями email та message,
-// які спочатку мають порожні рядки як значення: { email: "", message: "" }.
+// Оголоси поза будь-якими функціями об’єкт formData з полями email та message,            -------------
+// які спочатку мають порожні рядки як значення: { email: "", message: "" }.               -------------
 
 // Використовуй метод делегування для відстеження змін у формі через подію input.
 // Зберігай актуальні дані з полів email та message у formData та записуй цей об’єкт у локальне сховище.
@@ -18,44 +18,47 @@
 
 const form = document.querySelector('.feedback-form');
 
-// form.addEventListener('input', handleInput);
-// populateText();
+form.addEventListener('input', handleInput);
+form.addEventListener('submit', handleSubmit);
+
+populateText();
 
 const formData = {
   email: '',
-  massage: '',
+  message: '',
 };
 
-// function handleInput(event) {
-//   const key = event.target.name;
+function handleInput(event) {
+  const key = event.target.name;
 
-//   formData[key] = event.target.value;
+  formData[key] = event.target.value;
 
-//   localStorage.setItem(JSON.stringify(formData));
-// }
+  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+}
 
-// function populateText() {
-//   const data = JSON.parse(localStorage.getItem());
-//   if (!data) {
-//     return;
-//   }
-//   const { email, massage } = form.elements;
+function populateText() {
+  const data = JSON.parse(localStorage.getItem('feedback-form-state'));
+  if (!data) {
+    return;
+  }
+  const { email, message } = form.elements;
 
-//   email.value = data.email;
-//   massage.value = data.massage;
-// }
+  email.value = data.email;
+  message.value = data.message;
+}
 
-// const form = document.querySelector('.feedback-form');
-// const localStorageKey = 'goit-example-message';
+function validateForm() {
+  const trimmedEmail = formData.email.trim();
+  const trimmedMessage = formData.message.trim();
+  return trimmedEmail !== '' && trimmedMessage !== '';
+}
 
-// form.elements.message.value = localStorage.getItem(localStorageKey) ?? '';
-
-// form.addEventListener('input', evt => {
-//   localStorage.setItem(localStorageKey, evt.target.value);
-// });
-
-// form.addEventListener('submit', evt => {
-//   evt.preventDefault();
-//   localStorage.removeItem(localStorageKey);
-//   form.reset();
-// });
+function handleSubmit(event) {
+  event.preventDefault();
+  if (!validateForm()) {
+    alert('Fill please all fields');
+    return;
+  }
+  localStorage.removeItem('feedback-form-state');
+  form.reset();
+}
